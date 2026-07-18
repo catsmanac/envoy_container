@@ -126,7 +126,7 @@ The simulator offers a GUI accessible with your browser at the configured ip add
 
 ## Configuration
 
-<img src="/configuration.png" alt="configuration screenshot" />
+<img src="/src/static/configuration.png" alt="configuration screenshot" />
 
 Provides status and options to select for the running simulator.
 
@@ -147,7 +147,7 @@ Provides status and options to select for the running simulator.
 
 ## Log
 
-<img src="/log.png" alt="log screenshot" />
+<img src="/src/static/log.png" alt="log screenshot" />
 
 Shows logging of the requests. Is controlled by the verbosity level.
 
@@ -163,7 +163,7 @@ The `Copy log` button copies the log content to the clipboard.
 
 ## Cache
 
-<img src="/cache.png" alt="cache screenshot" />
+<img src="/src/static/cache.png" alt="cache screenshot" />
 
 Shows the content of the internal data model. Fixture files are loaded into the model upon first request. The list may grow in time as more endpoints are requested. If an endpoint is not in the list it was not yet requested.
 
@@ -173,7 +173,7 @@ The cache list will refresh each time a new fixture file is loaded. The `Refresh
 
 ## Fixtures
 
-<img src="/fixtures.png" alt="fixtures screenshot" />
+<img src="/src/static/fixtures.png" alt="fixtures screenshot" />
 
 Shows the fixture files in the active fixture file set. Fixture files set are located in the `/data/fixtures` folder. See [fixture files](#fixture-files) for a description of fixture file names.
 

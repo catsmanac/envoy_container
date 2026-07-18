@@ -51,13 +51,13 @@ def favicon():
     )
 
 
-@user.route("/flask-logo.png")
-@user.route("/configuration.png")
-@user.route("/log.png")
-@user.route("/cache.png")
-@user.route("/fixtures.png")
+@user.route("/src/static/flask-logo.png")
+@user.route("/src/static/configuration.png")
+@user.route("/src/static/log.png")
+@user.route("/src/static/cache.png")
+@user.route("/src/static/fixtures.png")
 def logo():
-    """Provide png files."""
+    """Provide png files shared between github readme and container index.html."""
     return send_from_directory(
-        "./static", request.path[1:], mimetype="image/vnd.microsoft.icon"
+        ".", request.path[1:].replace("src/", ""), mimetype="image/vnd.microsoft.icon"
     )
