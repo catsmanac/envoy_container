@@ -1,0 +1,142 @@
+<!-- Envoy simulator user gui page with controls, logs and file viewers -->
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Envoy Data Simulator</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <!-- https://cdnjs.com/libraries/showdown -->
+        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+        <script src="static/js/envoy_container.js"  type="text/javascript" charset="utf-8"></script>
+</script>
+    </head>
+    <body>
+        <!-- header with flask log -->
+        <div class="header">
+            <img src="/flask-logo.png" alt="flask logo" />
+            <h1>Envoy Data Simulator</h1>
+       </div>
+         <!-- Tab links -->
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'configuration')" id="defaultTabOpen">Configuration</button>
+            <button class="tablinks" onclick="openTab(event, 'logs')">Log</button>
+            <button class="tablinks" onclick="openTab(event, 'cache')">Cache</button>
+            <button class="tablinks" onclick="openTab(event, 'fixtures')">Fixtures</button>
+            <button class="tablinks" onclick="openTab(event, 'manual')">Manual</button>
+        </div>
+        <!-- Tab content -->
+        <!-- Configuration tab -->
+        <div id="configuration" class="tabcontent">
+            <h3>Configuration</h3>
+            <table id="info_table">
+                <tbody>
+                    <tr>
+                        <td>Verbose:</td><td id="verbosity">{{ sim.verbosity }}</td>
+                        <td><button  id="btnverbosity" class="sendid" title="Toggle verbosity 0-1-2-0">Toggle Verbosity</button></td>
+                    </tr>
+                    <tr><td>Serial number:</td><td id="serial">{{ sim.serial }}</td></tr>
+                    <tr><td>Firmware version:</td><td id="firmware">{{ sim.firmware }}</td></tr>
+                    <tr>
+                        <td><div title="Current active fixture folder">Fixture folder:</div></td><td id="path">{{ sim.path }}</td>
+                    </tr>
+                    <tr>
+                        <td><div title="Select other fixture folder to use">Switch to fixture:</div></td>
+                        <td>
+                            <select id="select_sim" title="Select fixture folder to load.">
+                                {% for item in sims %}
+                                <option value="{{ item }}">{{ item }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td><div title="Load selected fixture folder"><button  id="btnchangesim">< Switch</button></div></td>
+                    </tr>
+                    <tr>
+                        <td>JWT Authorized:</td><td id="authorized">{{ sim.authorized() }} ({{ sim.auth_count }})</td>
+                        <td><button id="btnauthorize" class="sendid" title="Toggle authorized on/off">Toggle Auth</button></td>
+                    </tr>
+                    <tr>
+                        <td>Restarting:</td><td id="envoy_cycling"><div title="Number of requests to end of restart">{{ sim.envoy_cycling }}</div></td>
+                        <td><button  id="btnrestart" class="sendid" title="Simulate or cancel restart cycle">Restart</button></td>
+                    </tr>
+                    <tr>
+                        <td><div title="Simulate timeout by delaying request reply">Timeout sim:</div></td>
+                        <td id="timeoutsim">{{ sim.timeoutsim }}</td>
+                        <td><button  id="btntimeoutsim" class="sendid" title="Toggle timeout simulation on/off">Toggle Timeout</button></td>
+                        <td><div id="sleepers" title="Number of request replies with active delay">sleepers: {{ sim.sleepers }}</div></td>
+                    </tr>
+                    <tr>
+                        <td><div title="Use this status for next request reply">Next req Status:</div></td>
+                        <td id="next_request_status"><div title="If 0 uses regular request status">{{ sim.next_request_status }}</div></td>
+                        <td>
+                            <button  id="btn401" class="sendid" title="Force 401 status for next request">401</button>
+                            <button  id="btn404" class="sendid" title="Force 404 status for next request">404</button>
+                            <button  id="btn503" class="sendid" title="Force 503 status for next request">503</button>
+                            <button  id="btnstatusclear" class="sendid" title="Use request status for next requests">clear</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><div title="Return empty inverter arrays">Empty inverter array:</div></td>
+                        <td id="empty_inverter_array">{{ sim.empty_inverter_array}}</td>
+                        <td><button  id="btnemptyinverter" class="sendid" title="Toggle empty inverter array on/off">Toggle empty array</button></td>
+                    </tr>
+                    <tr>
+                        <td><div title="Return malformed json inverter data">Inverter invalid json:</div></td>
+                        <td id="invalid_json">{{ sim.invalid_json}}</td>
+                        <td><button  id="btninvalidjson" class="sendid" title="Toggle invalid inverter json on/off">Toggle invalid json</button></td>
+                    </tr>
+                    <tr>
+                        <td><div title="Use this status for next tariff request reply">Next tariff status:</div></td>
+                        <td id="next_tariff_status"><div title="If 0 uses regular request status">{{sim.next_tariff_status }}</div></td>
+                        <td>
+                            <button  id="btntariff401" class="sendid" title="Force 401 status for next tariff request">401</button>
+                            <button  id="btntariff404" class="sendid" title="Force 404 status for next tariff request">404</button>
+                            <button  id="btntariff503" class="sendid" title="Force 503 status for next tariff request">503</button>
+                            <button  id="btntariffstatusclear" class="sendid" title="Use request status for next tariff requests">clear</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+         <!-- log tab -->
+        <div id="logs" class="tabcontent">
+            <button onclick="copyLog('log')">Copy Log</button>
+            <pre class="logger" id="log"></pre>
+        </div>
+        <!-- File cache list and content viewer -->
+        <div id="cache" class="tabcontent">
+            <button  id="btncacherefresh">Refresh</button>
+            <table><tbody><tr>
+                <td>
+                    <p class="filelist" id="cachefiles">cache</p>
+                </td>
+                <td>
+                    <h3 id="cachename"></h3>
+                    <pre class="filedetails" id="cache_viewer"></pre>
+                </td>
+            </tr></tbody></table>
+        </div>
+        <!-- Fixture file list and content viewer -->
+        <div id="fixtures" class="tabcontent">
+            <button  id="btnfixturesrefresh">Refresh</button>
+            <table><tbody><tr>
+                <td>
+                     <p class="filelist" id="fixturefiles">files</p>
+               </td>
+                <td>
+                    <h3 id="fixturename"></h3>
+                    <pre class="filedetails" id="fixture_viewer"></pre>
+                </td>
+            </tr></tbody></table>
+        </div>
+        <!-- show manual converted from markdown. -->
+        <div id="manual" class="tabcontent">
+            <div w3-include-html="readme" id="md" class="manual"></div>
+        </div>
+        <!-- include any html files -->
+        <!-- Open the default tab. -->
+        <script type="text/javascript">
+            includeHTML();
+            document.getElementById("defaultTabOpen").click();
+        </script>
+    </body>
+</html>

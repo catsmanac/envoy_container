@@ -1,0 +1,14 @@
+services:
+  # envoy_container
+  envoy_container:
+    container_name: envoy_container
+    restart: unless-stopped
+    image: envoy_container
+    build:
+      context: .
+    volumes:
+      - ${DATA_VOLUME}:/app/data
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - 443:443
+    privileged: false

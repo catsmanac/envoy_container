@@ -1,0 +1,123 @@
+/* Envoy simulator style */
+body {
+    font-family: Arial, Helvetica, sans-serif,Cambria, Cochin, Georgia, Times, 'Times New Roman', serif ;
+    color: #eee;
+    background-color: #333;
+    font-size: 0.9em;
+}
+
+/* logo and H1 style */
+.header img {
+  float: left;
+  width: 30px;
+  height: 30px;
+  background: #555;
+}
+
+.header h1 {
+  position: relative;
+  top: 0;
+  left: 10px;
+}
+
+/* Style the tab */
+.tab {
+  overflow: hidden;
+  border: 1px solid #ccc;
+  background-color: #f1f1f1;
+}
+
+/* Style the buttons that are used to open the tab content */
+.tab button {
+  background-color: inherit;
+  float: left;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 14px 16px;
+  transition: 0.3s;
+}
+
+/* Change background color of buttons on hover */
+.tab button:hover {
+  background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.tab button.active {
+  background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+  display: none;
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+/* Style the logging box */
+.logger {
+    max-height:70vh;
+    overflow:scroll;
+    border: 1px solid #666;
+}
+
+/* Style the cache and fixture file lists */
+.filelist {
+    max-height:70vh;
+    overflow:scroll;
+    border: 0px solid #ccc;
+    padding: 0px 24px;
+}
+
+/* Style the file content viewers */
+.filedetails {
+    max-height:68vh;
+    overflow:scroll;
+    border: 0px solid #ccc;
+    padding: 0px 12px;
+}
+
+/* Allign at the top of the cells */
+td {
+  vertical-align: baseline;
+}
+
+/* Style the logline highlight part */
+.highlight {
+  color: rgb(199, 61, 61)
+}
+
+/* style a refs */
+a {
+  color: #eee;
+}
+
+/* Prettyprint json */
+.json-key     { color: #a7b11f;; }
+.json-value   { color: #658ce2; }
+.json-boolean { color: rgb(199, 61, 61); }
+.json-string  { color: #eee; }
+
+
+/* Style the manual viewers */
+.manual {
+    max-height:75vh;
+    overflow:scroll;
+    border: 0px solid #ccc;
+    padding: 0px 12px;
+    /* font-family: Arial, Comic Sans MS, Comic Sans, Arial, serif ; */
+    font-size: 1.1em;
+    th {
+      text-align: left;
+    };
+    td {
+      padding: 2px 1em 0 0;
+      font-family: Arial, serif ;
+      font-size: 0.8em;
+    };
+    code {
+      font-size: 1.2em;
+    };
+}
