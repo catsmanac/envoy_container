@@ -223,3 +223,4 @@ def connect(message: Any):
     update_fixture_list()
     # this creates the first entry in the log viewer.
     emit_log(f"{request.remote_addr} connected to {request.path}")
+    update_index()
