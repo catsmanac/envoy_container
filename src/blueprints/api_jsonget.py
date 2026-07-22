@@ -67,6 +67,40 @@ def json_request():
         )
         status = _s
 
+    # for ACB finalize sleep state change one by one to sim delay
+    elif route_to_file() == "inventory.json_deleted_1":
+        found = False
+        for inv in sim.fixture_cache["inventory.json_deleted_1"]:
+            if inv["type"] == "ACB":
+                for acb in inv["devices"]:
+                    if acb["sleep_enabled"] and (
+                        "envoy.cond_flags.pcu_ctrl.sleep-mode"
+                        not in acb["device_status"]
+                    ):
+                        acb["device_status"].append(
+                            "envoy.cond_flags.pcu_ctrl.sleep-mode"
+                        )
+                        found = True
+                        break
+                if found:
+                    break
+
+                for acb in inv["devices"]:
+                    if (
+                        not acb["sleep_enabled"]
+                        and "envoy.cond_flags.pcu_ctrl.sleep-mode"
+                        in acb["device_status"]
+                    ):
+                        acb["device_status"] = [
+                            x
+                            for x in acb["device_status"]
+                            if x != "envoy.cond_flags.pcu_ctrl.sleep-mode"
+                        ]
+                        found = True
+                        break
+                if found:
+                    break
+
     emit_log(
         f'<code class="highlight">{request.path} {status}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
@@ -75,14 +109,14 @@ def json_request():
     return jsonify(content), status
 
 
-@api_jsonget.route("/<path>")
+@api_jsonget.route("/<path>", methods=["GET"])
 def json_path_get(path: str):
     # https://python-markdown.github.io/extensions/
     """Return json data."""
     return json_request()
 
 
-@api_jsonget.route("/<path:subpath>")
+@api_jsonget.route("/<path:subpath>", methods=["GET"])
 def json_subpath_get(subpath: str):
     # https://python-markdown.github.io/extensions/
     """Return json data."""

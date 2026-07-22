@@ -134,7 +134,7 @@ def post_dry_contacts():
     # update dry contact data in cache
     id = req_content["dry_contacts"]["id"]
     for idx, item in enumerate(
-        contacts := sim.fixture_cache[content[2]]["dry_contacts"]
+        contacts := sim.fixture_cache[file_loaded]["dry_contacts"]
     ):
         if item["id"] == id:
             # print(item)
@@ -173,7 +173,7 @@ def post_dry_contact_settings():
 
     # update dry contact data in cache
     id = req_content["dry_contacts"]["id"]
-    for item in sim.fixture_cache[content[2]]["dry_contacts"]:
+    for item in sim.fixture_cache[file_loaded]["dry_contacts"]:
         if item["id"] == id:
             item = req_content["dry_contacts"]
     content, status, file_loaded, added = sim.load_json(file_loaded)
@@ -210,13 +210,21 @@ def json_post():
     req_sleep = req_content["acb_sleep"]
     for sleep in req_sleep:
         found: bool = False
-        for item in sim.fixture_cache[content[2]]["acb_sleep"].values():
+        for item in sim.fixture_cache[file_loaded]["acb_sleep"]:
             if item["serial_num"] == sleep["serial_num"]:
                 item["sleep_min_soc"] = sleep["sleep_min_soc"]
                 item["sleep_max_soc"] = sleep["sleep_max_soc"]
                 found = True
         if not found:
-            sim.fixture_cache[content[2]]["acb_sleep"].append(sleep)
+            sim.fixture_cache[file_loaded]["acb_sleep"].append(sleep)
+        for inv in sim.fixture_cache["inventory.json_deleted_1"]:
+            if inv["type"] == "ACB":
+                for acb in inv["devices"]:
+                    if acb["serial_num"] == sleep["serial_num"]:
+                        acb["sleep_min_soc"] = sleep["sleep_min_soc"]
+                        acb["sleep_max_soc"] = sleep["sleep_max_soc"]
+                        acb["sleep_enabled"] = True
+
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
@@ -248,13 +256,19 @@ def json_delete():
     content, status, file_loaded, added = sim.load_json(route_to_file())
     abort_on_bad_status(status, file_loaded, added)
 
-    if "acb_sleep" in sim.fixture_cache[content[2]]:
+    if "acb_sleep" in sim.fixture_cache[file_loaded]:
         acb_sleep = req_content["acb_sleep"]
         for sleep in acb_sleep:
-            for item in sim.fixture_cache[content[2]]["acb_sleep"].values():
+            for item in sim.fixture_cache[file_loaded]["acb_sleep"]:
                 if item["serial_num"] == sleep["serial_num"]:
                     item["sleep_min_soc"] = None
                     item["sleep_max_soc"] = None
+            for inv in sim.fixture_cache["inventory.json_deleted_1"]:
+                if inv["type"] == "ACB":
+                    for acb in inv["devices"]:
+                        if acb["serial_num"] == sleep["serial_num"]:
+                            acb["sleep_enabled"] = False
+
     content, status, file_loaded = {"message": "success"}, 200, file_loaded
 
     emit_log(
