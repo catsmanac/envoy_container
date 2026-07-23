@@ -159,7 +159,22 @@ $(document).ready(function(){
         socket.emit('btnchangesim', {data: v});
     });
 
-    // signal (server/python) to toggle vebosity state
+    // signal (server/python) to reload cache list
+    //
+    $('#btncacherefresh').on("click", function(event) {
+        var v = document.getElementById('cachename')
+        socket.emit('btncacherefresh', {data:  v.textContent || v.innerText });
+    });
+    
+
+    // signal (server/python) to reload fixture list
+    //
+    $('#btnfixturesrefresh').on("click", function(event) {
+        var v = document.getElementById('fixturename')
+        socket.emit('btnfixturesrefresh', {data: v.textContent || v.innerText });
+    });
+
+    // signal (server/python) to toggle states
     //
     $('.sendid').on("click", function(event) {
         socket.emit(this.id, {data: ""});

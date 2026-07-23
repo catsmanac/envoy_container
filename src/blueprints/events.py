@@ -102,21 +102,21 @@ def btncacherefresh(message: Any):
     sim: EnvoySim | None = getsim()
     if not sim:
         return
-    update_cache_list()
+    update_cache_list(message["data"])
     if sim.verbosity > 1:
-        emit_log("cache list refresh", True)
+        emit_log(f"cache list refresh {message}", True)
 
 
-@events.on("btnfixturefresh")  # type: ignore
-def btnfixturefresh(message: Any):
+@events.on("btnfixturesrefresh")  # type: ignore
+def btnfixturesrefresh(message: Any):
     """Execute fixture list refresh."""
     sim: EnvoySim | None = getsim()
     if not sim:
         return
     # update the fixture list
-    update_fixture_list()
+    update_fixture_list(message["data"])
     if sim.verbosity > 1:
-        emit_log("fixture list refresh", True)
+        emit_log(f"fixture list refresh {message}", True)
 
 
 def set_next_status(attribute: Any, value: int):

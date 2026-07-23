@@ -129,7 +129,7 @@ async def before_requests():
         abort(result, "status overridden")
 
 
-def update_cache_list():
+def update_cache_list(cachename: str = ""):
     """Send updates from cache."""
     sim: EnvoySim | None = getsim()
     if sim is None:
@@ -143,13 +143,13 @@ def update_cache_list():
     )
     list += "</ul>"
     emit("updateElement", {"cachefiles": f" {list}"}, broadcast=True, namespace="/")
-    emit("updateElement", {"cache_viewer": " "}, broadcast=True, namespace="/")
-    emit("updateElement", {"cachename": ""}, broadcast=True, namespace="/")
+    emit("showcachefile", {"data": cachename}, broadcast=True, namespace="/")
+    # emit("updateElement", {"cachename": cachename}, broadcast=True, namespace="/")
     if sim.verbosity > 1:
         emit_log("updating cache list", logit=True)
 
 
-def update_fixture_list():
+def update_fixture_list(fixturename: str = ""):
     """Send updates from fixtures."""
     sim: EnvoySim | None = getsim()
     if sim is None:
@@ -170,7 +170,7 @@ def update_fixture_list():
     )
     list += "</ul>"
     emit("updateElement", {"fixturefiles": f"{list}"}, broadcast=True, namespace="/")
-    emit("updateElement", {"fixture_viewer": " "}, broadcast=True, namespace="/")
-    emit("updateElement", {"fixturename": ""}, broadcast=True, namespace="/")
+    emit("showfixturefile", {"data": fixturename}, broadcast=True, namespace="/")
+    # emit("updateElement", {"fixturename": ""}, broadcast=True, namespace="/")
     if sim.verbosity > 1:
         emit_log(f"updating fixture list {sim.fixture_folder()}", logit=True)
