@@ -26,9 +26,9 @@ def info():
     if sim is None:
         logger.info("service unavailable")
         abort(503, "No sim loaded")
-    content = sim.load_text_file(route_to_file())
+    content, status, file_loaded, added = sim.load_text_file(route_to_file())
     emit_log(
-        f'<code class="highlight">{request.path} {content[1]}</code> '
-        + f"{content[2]} {content[0] if sim.verbosity > 0 else ''}"
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        + f"{file_loaded} {content if sim.verbosity > 0 else ''}"
     )
-    return Response(content[0], mimetype="text/xml"), content[1]
+    return Response(content, mimetype="text/xml"), status
