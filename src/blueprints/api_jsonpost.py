@@ -29,30 +29,17 @@ def abort_on_bad_status(status: int, target_file: str, added: bool):
         update_cache_list()
 
 
-@api_jsonpost.route("/admin/lib/tariff", methods=["PUT", "POST"])
-def post_tariff():
-    """PUT, POST tariff data."""
+def get_sim_or_abort():
+    """Verify post request for existing sim and data."""
     sim: EnvoySim | None = getsim()
     if sim is None:
         logger.info("service unavailable")
         abort(503, "No sim loaded")
 
-    # for tariff endpoint send 401, 404 or 503 status if overridden
-    if (_s := sim.next_tariff_status) > 0:
-        content = (
-            "Unauthorized"
-            if _s == 401
-            else "NotFound"
-            if _s == 404
-            else "Service Unavailable"
-        )
-        status = _s
-        return jsonify(content), status
-
     # get posted data
     req_content: dict[str, Any] = json.loads(request.data)
     emit_log(
-        f'<code class="highlight">{request.path} update</code> '
+        f'<code class="highlight">{request.method} {request.path}</code> '
         + f"{req_content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -60,6 +47,14 @@ def post_tariff():
     # make sure route data is in cache
     content, status, file_loaded, added = sim.load_json(route_to_file())
     abort_on_bad_status(status, file_loaded, added)
+
+    return sim, req_content, content, status, file_loaded
+
+
+@api_jsonpost.route("/admin/lib/tariff", methods=["PUT", "POST"])
+def post_tariff():
+    """PUT, POST tariff data."""
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
 
     # update tariff data in cache
     sim.fixture_cache[file_loaded] = {
@@ -69,7 +64,7 @@ def post_tariff():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -79,22 +74,7 @@ def post_tariff():
 @api_jsonpost.route("/ivp/ensemble/relay", methods=["POST"])
 def post_relay():
     """POST relay data."""
-    sim: EnvoySim | None = getsim()
-    if sim is None:
-        logger.info("service unavailable")
-        abort(503, "No sim loaded")
-
-    # get posted data
-    req_content: dict[str, Any] = json.loads(request.data)
-    emit_log(
-        f'<code class="highlight">{request.path} update</code> '
-        + f"{req_content if sim.verbosity > 0 else ''}",
-        True,
-    )
-
-    # make sure required data is in cache
-    content, status, file_loaded, added = sim.load_json(route_to_file())
-    abort_on_bad_status(status, file_loaded, added)
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
 
     # update relay data in cache
     for item in sim.fixture_cache[file_loaded]:
@@ -104,7 +84,7 @@ def post_relay():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -114,22 +94,7 @@ def post_relay():
 @api_jsonpost.route("/ivp/ensemble/dry_contacts", methods=["POST"])
 def post_dry_contacts():
     """POST dry contact data data."""
-    sim: EnvoySim | None = getsim()
-    if sim is None:
-        logger.info("service unavailable")
-        abort(503, "No sim loaded")
-
-    # get posted data
-    req_content: dict[str, Any] = json.loads(request.data)
-    emit_log(
-        f'<code class="highlight">{request.path} update</code> '
-        + f"{req_content if sim.verbosity > 0 else ''}",
-        True,
-    )
-
-    # make sure route data is in cache
-    content, status, file_loaded, added = sim.load_json(route_to_file())
-    abort_on_bad_status(status, file_loaded, added)
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
 
     # update dry contact data in cache
     id = req_content["dry_contacts"]["id"]
@@ -144,7 +109,7 @@ def post_dry_contacts():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -154,22 +119,7 @@ def post_dry_contacts():
 @api_jsonpost.route("/ivp/ss/dry_contact_settings", methods=["POST"])
 def post_dry_contact_settings():
     """POST dry contact data data."""
-    sim: EnvoySim | None = getsim()
-    if sim is None:
-        logger.info("service unavailable")
-        abort(503, "No sim loaded")
-
-    # get posted data
-    req_content: dict[str, Any] = json.loads(request.data)
-    emit_log(
-        f'<code class="highlight">{request.path} update</code> '
-        + f"{req_content if sim.verbosity > 0 else ''}",
-        True,
-    )
-
-    # make sure route data is in cache
-    content, status, file_loaded, added = sim.load_json(route_to_file())
-    abort_on_bad_status(status, file_loaded, added)
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
 
     # update dry contact data in cache
     id = req_content["dry_contacts"]["id"]
@@ -179,7 +129,7 @@ def post_dry_contact_settings():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -188,24 +138,9 @@ def post_dry_contact_settings():
 
 @api_jsonpost.route("/admin/lib/acb_config", methods=["PUT"])
 @api_jsonpost.route("/admin/lib/acb_config.json", methods=["PUT"])
-def json_post():
-    """PUT json data."""
-    sim: EnvoySim | None = getsim()
-    if sim is None:
-        logger.info("service unavailable")
-        abort(503, "No sim loaded")
-
-    # get posted data
-    req_content: dict[str, Any] = json.loads(request.data)
-    emit_log(
-        f'<code class="highlight">{request.path} put</code> '
-        + f"{req_content if sim.verbosity > 0 else ''}",
-        True,
-    )
-
-    # make sure route data is in cache
-    content, status, file_loaded, added = sim.load_json(route_to_file())
-    abort_on_bad_status(status, file_loaded, added)
+def json_acb_post():
+    """PUT ACB json data."""
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
 
     req_sleep = req_content["acb_sleep"]
     for sleep in req_sleep:
@@ -228,7 +163,7 @@ def json_post():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -237,24 +172,9 @@ def json_post():
 
 @api_jsonpost.route("/admin/lib/acb_config", methods=["DELETE"])
 @api_jsonpost.route("/admin/lib/acb_config.json", methods=["DELETE"])
-def json_delete():
-    """DEKLETE json data."""
-    sim: EnvoySim | None = getsim()
-    if sim is None:
-        logger.info("service unavailable")
-        abort(503, "No sim loaded")
-
-    # get posted data
-    req_content: dict[str, Any] = json.loads(request.data)
-    emit_log(
-        f'<code class="highlight">{request.path} delete</code> '
-        + f"{req_content if sim.verbosity > 0 else ''}",
-        True,
-    )
-
-    # make sure route data is in cache
-    content, status, file_loaded, added = sim.load_json(route_to_file())
-    abort_on_bad_status(status, file_loaded, added)
+def json_acb_delete():
+    """DELETE json data."""
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
 
     if "acb_sleep" in sim.fixture_cache[file_loaded]:
         acb_sleep = req_content["acb_sleep"]
@@ -272,7 +192,64 @@ def json_delete():
     content, status, file_loaded = {"message": "success"}, 200, file_loaded
 
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        True,
+    )
+    return jsonify(content), status
+
+
+@api_jsonpost.route("/ivp/ss/gen_mode", methods=["POST"])
+def post_ss_gen_mode():
+    """POST generator mode."""
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
+
+    # update generator mode data in cache
+    for item in sim.fixture_cache[file_loaded]:
+        if item == "gen_cmd":
+            sim.fixture_cache[file_loaded][item] = req_content[item]
+    content, status, file_loaded, added = sim.load_json(file_loaded)
+
+    emit_log(
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        True,
+    )
+    return jsonify(content), status
+
+
+@api_jsonpost.route("/ivp/ss/gen_schedule", methods=["POST"])
+def post_ivp_ss_gen_schedule():
+    """POST generator execrcise schedule."""
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
+
+    # update generator mode data in cache
+    for item in sim.fixture_cache[file_loaded]:
+        if item == "exercise_config":
+            sim.fixture_cache[file_loaded][item] = req_content[item]
+    content, status, file_loaded, added = sim.load_json(file_loaded)
+
+    emit_log(
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        True,
+    )
+    return jsonify(content), status
+
+
+@api_jsonpost.route("/ivp/ss/gen_config", methods=["POST"])
+def post_ivp_ivp_ss_gen_config():
+    """POST generator execrcise schedule."""
+    sim, req_content, content, status, file_loaded = get_sim_or_abort()
+
+    # update generator configuration in cache
+    for item in sim.fixture_cache[file_loaded]:
+        if item == "charge_from_generator":
+            sim.fixture_cache[file_loaded][item] = req_content[item]
+    content, status, file_loaded, added = sim.load_json(file_loaded)
+
+    emit_log(
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
