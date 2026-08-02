@@ -37,7 +37,11 @@ def after_request(response: Response):
     """Handle after request for all paths."""
     # report error codes to interactive logger
     if response.status_code >= 300:
-        emit_log(f'<code class="highlight">{request.path} {response.status}</code>')
+        emit_log(
+            '<code class="highlight">'
+            + f"{request.method} {response.status} {request.path}"
+            + "</code>"
+        )
     return response
 
 

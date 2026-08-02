@@ -52,7 +52,8 @@ def auth_check_jwt():
     response = make_response("<!DOCTYPE html><h2>Valid token.</h2>")
     response.set_cookie("user_visit", str(1))
     emit_log(
-        f'<code class="highlight">{request.path} {response.status}</code> '
+        f'<code class="highlight">{request.method} {response.status} '
+        + f"{request.path}</code> "
         + f"{response.get_data() if sim.verbosity > 0 else ''}"
     )
     return response
