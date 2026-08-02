@@ -153,6 +153,7 @@ These allow manual control to simulate specific behavior to be tested.
 | Empty Inverter Array | Return an empty inverter array for next /api/v1/production/inverters endpoint. | Use `Toggle empty array` button to (de-)activate. |
 | Inverter Invalid json | Return malformed inverter json for next /api/v1/production/inverters endpoint. | Use `Toggle invalid json` button to (de-)activate. |
 | Next tariff Status | Force selected status only for /lib/admin/tariff endpoint. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
+| Sc sched invalid status | Return an invalid status 0 for /ivp/sc/sched endpoint. | Use `Toggle sc sched status 0` button to (de-)activate. |
 
 ### Build-in simulations
 

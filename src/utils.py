@@ -73,6 +73,7 @@ def update_index():
             "empty_inverter_array": f"{sim.empty_inverter_array}",
             "invalid_json": f"{sim.invalid_json}",
             "next_tariff_status": f"{sim.next_tariff_status}",
+            "sc_sched_status_0": f"{sim.sc_sched_status_0}",
         },
         broadcast=True,
         namespace="/",

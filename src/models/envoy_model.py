@@ -31,6 +31,7 @@ class EnvoySim:
     empty_inverter_array: bool = False  # return empty inverter array
     invalid_json: bool = False  # invalid json for next inverter datan request if >0
     next_tariff_status: int = 0  # reply nexttarif endpoint with this status
+    sc_sched_status_0: bool = False  # return invalid status 0
 
     stream: bool = False  # streaming mode on/off
     stream_interval: float = 2.0  # sleep time between sending stream data
@@ -70,8 +71,8 @@ class EnvoySim:
         except FileNotFoundError, IsADirectoryError:
             logger.debug(f"File Not Found {target}")
             return f"fixture {file} notfound", 404, file, False
-        except ValueError:
-            logger.warning(f"Value Error in {target}")
+        except ValueError as err:
+            logger.warning(f"Value Error in {target}, {err}")
             return f"value error in {file}", 404, file, False
 
     def load_text_file(
@@ -132,6 +133,7 @@ class EnvoySim:
         self.empty_inverter_array = False
         self.invalid_json = False
         self.next_tariff_status = 0
+        self.sc_sched_status_0 = False
 
         logger.info(f"sim firmware: {self.firmware}")
         logger.info(f"sim serial: {self.serial}")

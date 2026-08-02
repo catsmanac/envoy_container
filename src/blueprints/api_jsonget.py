@@ -101,8 +101,13 @@ def json_request():
                 if found:
                     break
 
+    # for ivp/sc/sched send status 0 if
+    elif route_to_file() == "ivp_sc_sched" and sim.sc_sched_status_0:
+        content = {}
+        status = 0
+
     emit_log(
-        f'<code class="highlight">{request.path} {status}</code> '
+        f'<code class="highlight">{request.method} {status} {request.path}</code> '
         + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )

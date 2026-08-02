@@ -90,6 +90,12 @@ def btnemptyinverter(message: Any):
     toggle_bool("empty_inverter_array")
 
 
+@events.on("btnscschedstatus0")  # type: ignore
+def btnscschedstatus0(message: Any):
+    """Toggle sc sched bad simulation on/off each button click."""
+    toggle_bool("sc_sched_status_0")
+
+
 @events.on("btninvalidjson")  # type: ignore
 def btninvalidjson(message: Any):
     """Toggle empy inverters array simulation on/off each button click."""
