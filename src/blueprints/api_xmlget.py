@@ -29,6 +29,6 @@ def info():
     content, status, file_loaded, added = sim.load_text_file(route_to_file())
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}"
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}"
     )
     return Response(content, mimetype="text/xml"), status

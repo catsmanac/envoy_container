@@ -40,7 +40,7 @@ def get_sim_or_abort():
     req_content: dict[str, Any] = json.loads(request.data)
     emit_log(
         f'<code class="highlight">{request.method} {request.path}</code> '
-        + f"{req_content if sim.verbosity > 0 else ''}",
+        + f"processing {req_content if sim.verbosity > 0 else ''}",
         True,
     )
 
@@ -65,7 +65,7 @@ def post_tariff():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -85,7 +85,7 @@ def post_relay():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -110,7 +110,7 @@ def post_dry_contacts():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -130,7 +130,7 @@ def post_dry_contact_settings():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -164,7 +164,7 @@ def json_acb_post():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -193,7 +193,7 @@ def json_acb_delete():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -212,7 +212,7 @@ def post_ss_gen_mode():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -231,7 +231,7 @@ def post_ivp_ss_gen_schedule():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
@@ -250,7 +250,7 @@ def post_ivp_ivp_ss_gen_config():
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {request.path}</code> '
-        + f"{file_loaded} {content if sim.verbosity > 0 else ''}",
+        + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
     return jsonify(content), status
