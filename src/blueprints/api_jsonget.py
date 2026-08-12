@@ -8,7 +8,13 @@ from flask import abort, jsonify, request
 
 from io_blueprint import IOBlueprint
 from models.envoy_model import EnvoySim
-from utils import before_requests, emit_log, getsim, route_to_file, update_cache_list
+from utils import (
+    before_requests,
+    emit_log,
+    getsim,
+    route_to_file,
+    update_cache_list,
+)
 
 logger = logging.getLogger(__name__)
 api_jsonget = IOBlueprint("api_jsonget", __name__)
@@ -26,24 +32,24 @@ def json_request():
     if sim is None:
         logger.info("service unavailable")
         abort(503, "No sim loaded")
-    content, status, file_loaded, added = sim.load_json(route_to_file())
+    content, status, file_loaded, added = sim.load_json(froute := route_to_file())
     if added:
         update_cache_list()
 
     # for inverters endpoint send empty list if overridden and count down
-    if route_to_file() == "api_v1_production_inverters" and sim.empty_inverter_array:
+    if (froute) == "api_v1_production_inverters" and sim.empty_inverter_array:
         content = {}
         status = 200
 
     # for inverters endpoint force invalid json if overridden and count down
-    elif route_to_file() == "api_v1_production_inverters" and sim.invalid_json:
+    elif froute == "api_v1_production_inverters" and sim.invalid_json:
         content = "invalid json"
         status = 200
 
     # if v1 production endpoint and envoy restart is active
     # send zero values for fw 3 until restart is complete
     elif (
-        route_to_file() == "api_v1_production"
+        froute == "api_v1_production"
         and (sim.envoy_cycling > 0)
         and AwesomeVersion(sim.firmware).major == "3"
     ):
@@ -57,7 +63,7 @@ def json_request():
         status = 200
 
     # for tariff endpoint send 401, 404 or 503 status if overridden
-    elif route_to_file() == "admin_lib_tariff" and ((_s := sim.next_tariff_status) > 0):
+    elif froute == "admin_lib_tariff" and ((_s := sim.next_tariff_status) > 0):
         content = (
             "Unauthorized"
             if _s == 401
@@ -68,9 +74,9 @@ def json_request():
         status = _s
 
     # for ACB finalize sleep state change one by one to sim delay
-    elif route_to_file() == "inventory.json_deleted_1":
+    elif froute == "inventory.json_deleted_1":
         found = False
-        for inv in sim.fixture_cache["inventory.json_deleted_1"]:
+        for inv in sim.fixture_cache[froute]:
             if inv["type"] == "ACB":
                 for acb in inv["devices"]:
                     if acb["sleep_enabled"] and (
@@ -101,8 +107,8 @@ def json_request():
                 if found:
                     break
 
-    # for ivp/sc/sched send status 0 if
-    elif route_to_file() == "ivp_sc_sched" and sim.sc_sched_status_0:
+    # for ivp/sc/sched send status 0 if sim is enabled
+    elif froute == "ivp_sc_sched" and sim.sc_sched_status_0:
         content = {}
         status = 0
 

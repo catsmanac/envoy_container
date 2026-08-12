@@ -6,7 +6,7 @@ from flask_sslify import SSLify  # type: ignore
 
 import blueprints
 from app_setup import app_setup
-from utils import emit_log
+from utils import emit_log, full_path
 
 app = Flask(__name__)
 app.config.update(app_setup())  # type: ignore
@@ -36,10 +36,11 @@ app.app_context().push()
 def after_request(response: Response):
     """Handle after request for all paths."""
     # report error codes to interactive logger
+    endpoint = full_path()
     if response.status_code >= 300:
         emit_log(
             '<code class="highlight">'
-            + f"{request.method} {response.status} {request.path}"
+            + f"{request.method} {response.status} {endpoint}"
             + "</code>"
         )
     return response

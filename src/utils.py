@@ -80,15 +80,26 @@ def update_index():
     )
 
 
+def full_path():
+    """Full route name with arguments appended"""
+    endpoint = request.path
+    # add argument name and values
+    for arg, val in request.args.items():
+        endpoint += f"_{arg}_{val}"
+    return endpoint
+
+
 async def before_requests():
     """Before each request gets processed."""
     route = request.path
+    endpoint = full_path()
+
     sim: EnvoySim | None = getsim()
     if sim is None:
-        logger.warning(f"before request no sim loaded {route}")
-        abort(503, description=f"before request no sim loaded {route}")
+        logger.warning(f"before request no sim loaded {endpoint}")
+        abort(503, description=f"before request no sim loaded {endpoint}")
     if sim.verbosity > 1:
-        emit_log(f"before request {route}", logit=True)
+        emit_log(f"before request {endpoint}", logit=True)
 
     # if HTTPS and not authorized only let /info and /home pass
     # others get 404 till authorized by calling "auth/check_jwt"
@@ -112,7 +123,7 @@ async def before_requests():
     # simulate timeout by delaying abort for 150 sec for any request
     request_ip = request.environ.get("REMOTE_ADDR")
     if sim.timeoutsim and request.path not in ("/info", "/info.xml", "/auth/check_jwt"):
-        emit_log(f"Sleeping on {request_ip} {request.path}", logit=True)
+        emit_log(f"Sleeping on {request_ip} {endpoint}", logit=True)
         sim.sleepers += 1
         update_index()
         await asyncio.sleep(sim.ip_sleep_time)

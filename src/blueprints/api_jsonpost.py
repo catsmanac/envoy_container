@@ -8,7 +8,14 @@ from flask import abort, jsonify, request
 
 from io_blueprint import IOBlueprint
 from models.envoy_model import EnvoySim
-from utils import before_requests, emit_log, getsim, route_to_file, update_cache_list
+from utils import (
+    before_requests,
+    emit_log,
+    full_path,
+    getsim,
+    route_to_file,
+    update_cache_list,
+)
 
 logger = logging.getLogger(__name__)
 api_jsonpost = IOBlueprint("api_jsonpost", __name__)
@@ -39,7 +46,7 @@ def get_sim_or_abort():
     # get posted data
     req_content: dict[str, Any] = json.loads(request.data)
     emit_log(
-        f'<code class="highlight">{request.method} {request.path}</code> '
+        f'<code class="highlight">{request.method} {full_path()}</code> '
         + f"processing {req_content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -64,7 +71,7 @@ def post_tariff():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -84,7 +91,7 @@ def post_relay():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -109,7 +116,7 @@ def post_dry_contacts():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -129,7 +136,7 @@ def post_dry_contact_settings():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -163,7 +170,7 @@ def json_acb_post():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -192,7 +199,7 @@ def json_acb_delete():
     content, status, file_loaded = {"message": "success"}, 200, file_loaded
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -211,7 +218,7 @@ def post_ss_gen_mode():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -230,7 +237,7 @@ def post_ivp_ss_gen_schedule():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
@@ -249,7 +256,7 @@ def post_ivp_ivp_ss_gen_config():
     content, status, file_loaded, added = sim.load_json(file_loaded)
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
