@@ -11,6 +11,7 @@ from models.envoy_model import EnvoySim
 from utils import (
     before_requests,
     emit_log,
+    full_path,
     getsim,
     route_to_file,
     update_cache_list,
@@ -113,7 +114,7 @@ def json_request():
         status = 0
 
     emit_log(
-        f'<code class="highlight">{request.method} {status} {request.path}</code> '
+        f'<code class="highlight">{request.method} {status} {full_path()}</code> '
         + f"fixture {file_loaded} {content if sim.verbosity > 0 else ''}",
         True,
     )
