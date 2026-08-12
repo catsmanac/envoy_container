@@ -1,5 +1,6 @@
 """envoy GET for json files."""
 
+import copy
 import logging
 from typing import Any
 
@@ -60,7 +61,7 @@ def json_request():
         segment["wattHoursSevenDays"] = 0
         segment["wattHoursLifetime"] = 0
         segment["wattsNow"] = 0
-        content: dict[str, Any] | list[Any] | str = segment
+        content = segment
         status = 200
 
     # for tariff endpoint send 401, 404 or 503 status if overridden
@@ -112,6 +113,14 @@ def json_request():
     elif froute == "ivp_sc_sched" and sim.sc_sched_status_0:
         content = {}
         status = 0
+
+    # for /production set activeCount of production eim 0 if sim is enabled
+    elif froute in ("production", "production.json", "production.json_details_1"):
+        orig_content, status, file_loaded, added = sim.load_json(froute)
+        content: dict[str, Any] = copy.deepcopy(orig_content)
+
+        if sim.active_eim_0:
+            content["production"][1]["activeCount"] = 0
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {full_path()}</code> '

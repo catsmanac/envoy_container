@@ -74,6 +74,7 @@ def update_index():
             "invalid_json_value": f"{sim.invalid_json}",
             "next_tariff_status_value": f"{sim.next_tariff_status}",
             "sc_sched_status_0_value": f"{sim.sc_sched_status_0}",
+            "active_eim_0_value": f"{sim.active_eim_0}",
         },
         broadcast=True,
         namespace="/",
