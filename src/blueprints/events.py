@@ -78,28 +78,10 @@ def toggle_bool(attribute: Any):
         emit_log(f"Setting {attribute} to {target}", True)
 
 
-@events.on("btntimeoutsim")  # type: ignore
-def btntimeoutsim(message: Any):
-    """Toggle timeout simulation on/off each Timeout On button click."""
-    toggle_bool("timeoutsim")
-
-
-@events.on("btnemptyinverter")  # type: ignore
-def btnemptyinverter(message: Any):
-    """Toggle empy inverters array simulation on/off each button click."""
-    toggle_bool("empty_inverter_array")
-
-
-@events.on("btnscschedstatus0")  # type: ignore
-def btnscschedstatus0(message: Any):
-    """Toggle sc sched bad simulation on/off each button click."""
-    toggle_bool("sc_sched_status_0")
-
-
-@events.on("btninvalidjson")  # type: ignore
-def btninvalidjson(message: Any):
-    """Toggle empy inverters array simulation on/off each button click."""
-    toggle_bool("invalid_json")
+@events.on("togglebool")  # type: ignore
+def btntogglebool(message: Any):
+    """Toggle bool on/off each button click."""
+    toggle_bool(message["data"])
 
 
 @events.on("btncacherefresh")  # type: ignore

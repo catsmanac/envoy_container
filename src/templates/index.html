@@ -1,22 +1,29 @@
-<!-- Envoy simulator user gui page with controls, logs and file viewers -->
+<!-- Envoy data simulator user gui page with controls, logs and file viewers -->
 <!DOCTYPE html>
 <html>
     <head>
         <title>Envoy Data Simulator</title>
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script 
+            src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+            integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+            crossorigin="anonymous">
+        </script>
         <!-- https://cdnjs.com/libraries/showdown -->
-        <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+        <script 
+            src="https://cdn.socket.io/4.7.5/socket.io.min.js" 
+            integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" 
+            crossorigin="anonymous">
+        </script>
         <script src="static/js/envoy_container.js"  type="text/javascript" charset="utf-8"></script>
-</script>
     </head>
     <body>
-        <!-- header with flask log -->
+        <!-- header with flask logo -->
         <div class="header">
             <img src="/src/static/flask-logo.png" alt="flask logo" />
             <h1>Envoy Data Simulator</h1>
-       </div>
-         <!-- Tab links -->
+        </div>
+         <!-- Tabs at the top for various pages -->
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'configuration')" id="defaultTabOpen">Configuration</button>
             <button class="tablinks" onclick="openTab(event, 'logs')">Log</button>
@@ -29,18 +36,32 @@
         <div id="configuration" class="tabcontent">
             <h3>Configuration</h3>
             <table id="info_table">
+                <!-- Table has multiple collumns: configuration item name, current value, command controls and misc info -->
                 <tbody>
+                    <!-- Verbosity level selector -->
                     <tr>
-                        <td>Verbose:</td><td id="verbosity">{{ sim.verbosity }}</td>
+                        <td>Verbose:</td>
+                        <td id="verbosity_value">{{ sim.verbosity }}</td>
                         <td><button  id="btnverbosity" class="sendid" title="Toggle verbosity 0-1-2-0">Toggle Verbosity</button></td>
                     </tr>
-                    <tr><td>Serial number:</td><td id="serial">{{ sim.serial }}</td></tr>
-                    <tr><td>Firmware version:</td><td id="firmware">{{ sim.firmware }}</td></tr>
+                    <!-- Envoy serial number returned in all data with serial number, overrides file values-->
                     <tr>
-                        <td><div title="Current active fixture folder">Fixture folder:</div></td><td id="path">{{ sim.path }}</td>
+                        <td>Serial number:</td>
+                        <td id="serial_value">{{ sim.serial }}</td>
                     </tr>
+                    <!-- firmware version in info file of loaded fixture folder-->
                     <tr>
-                        <td><div title="Select other fixture folder to use">Switch to fixture:</div></td>
+                        <td>Firmware version:</td>
+                        <td id="firmware_value">{{ sim.firmware }}</td>
+                    </tr>
+                    <!-- Current loaded fixture folder-->
+                    <tr>
+                        <td><div title="Current active fixture folder">Fixture folder:</div></td>
+                        <td id="path_value">{{ sim.path }}</td>
+                    </tr>
+                    <!-- Selector for next fixture to load and command button to load selected fixture-->
+                    <tr>
+                        <td><div title="Fixture folder to load">Switch to fixture:</div></td>
                         <td>
                             <select id="select_sim" title="Select fixture folder to load.">
                                 {% for item in sims %}
@@ -48,25 +69,31 @@
                                 {% endfor %}
                             </select>
                         </td>
-                        <td><div title="Load selected fixture folder"><button  id="btnchangesim">< Switch</button></div></td>
+                        <td><div title="Load selected fixture folder"><button  id="btnchangesim">< Load</button></div></td>
                     </tr>
+                    <!-- State of JWT key, if JWT validate req was send and button to toggle state on/off-->
                     <tr>
-                        <td>JWT Authorized:</td><td id="authorized">{{ sim.authorized() }} ({{ sim.auth_count }})</td>
+                        <td>JWT Authorized:</td>
+                        <td id="authorized_value">{{ sim.authorized() }} ({{ sim.auth_count }})</td>
                         <td><button id="btnauthorize" class="sendid" title="Toggle authorized on/off">Toggle Auth</button></td>
                     </tr>
+                    <!-- Envoy restarting simulation, counter to completion and button to toggle on/off-->
                     <tr>
-                        <td>Restarting:</td><td id="envoy_cycling"><div title="Number of requests to end of restart">{{ sim.envoy_cycling }}</div></td>
+                        <td>Restarting:</td>
+                        <td id="envoy_cycling_value"><div title="Number of requests to end of restart">{{ sim.envoy_cycling }}</div></td>
                         <td><button  id="btnrestart" class="sendid" title="Simulate or cancel restart cycle">Restart</button></td>
                     </tr>
+                   <!-- Timeout simulation, status and button to toggle on/off, count of requests that are in timeout mode-->
                     <tr>
                         <td><div title="Simulate timeout by delaying request reply">Timeout sim:</div></td>
-                        <td id="timeoutsim">{{ sim.timeoutsim }}</td>
-                        <td><button  id="btntimeoutsim" class="sendid" title="Toggle timeout simulation on/off">Toggle Timeout</button></td>
+                        <td id="timeoutsim_value">{{ sim.timeoutsim }}</td>
+                        <td><button  id="timeoutsim" class="togglebool" title="Toggle timeout simulation on/off">Toggle Timeout</button></td>
                         <td><div id="sleepers" title="Number of request replies with active delay">sleepers: {{ sim.sleepers }}</div></td>
                     </tr>
+                   <!-- Any request status simulation, selected value and buttons to select -->
                     <tr>
                         <td><div title="Use this status for next request reply">Next req Status:</div></td>
-                        <td id="next_request_status"><div title="If 0 uses regular request status">{{ sim.next_request_status }}</div></td>
+                        <td id="next_request_status_value"><div title="If 0 uses regular request status">{{ sim.next_request_status }}</div></td>
                         <td>
                             <button  id="btn401" class="sendid" title="Force 401 status for next request">401</button>
                             <button  id="btn404" class="sendid" title="Force 404 status for next request">404</button>
@@ -74,19 +101,22 @@
                             <button  id="btnstatusclear" class="sendid" title="Use request status for next requests">clear</button>
                         </td>
                     </tr>
+                   <!-- Empty inverter array issue simulation, status and buttons to switch on/off -->
                     <tr>
                         <td><div title="Return empty inverter arrays">Empty inverter array:</div></td>
-                        <td id="empty_inverter_array">{{ sim.empty_inverter_array}}</td>
-                        <td><button  id="btnemptyinverter" class="sendid" title="Toggle empty inverter array on/off">Toggle empty array</button></td>
+                        <td id="empty_inverter_array_value">{{ sim.empty_inverter_array}}</td>
+                        <td><button  id="empty_inverter_array" class="togglebool" title="Toggle empty inverter array on/off">Toggle empty array</button></td>
                     </tr>
+                   <!-- Malformed inverter json issue simulation, status and buttons to switch on/off -->
                     <tr>
                         <td><div title="Return malformed json inverter data">Inverter invalid json:</div></td>
-                        <td id="invalid_json">{{ sim.invalid_json}}</td>
-                        <td><button  id="btninvalidjson" class="sendid" title="Toggle invalid inverter json on/off">Toggle invalid json</button></td>
+                        <td id="invalid_json_value">{{ sim.invalid_json}}</td>
+                        <td><button  id="invalid_json" class="togglebool" title="Toggle invalid inverter json on/off">Toggle invalid json</button></td>
                     </tr>
+                   <!-- Tariff request status simulation, selected value and buttons to select -->
                     <tr>
                         <td><div title="Use this status for next tariff request reply">Next tariff status:</div></td>
-                        <td id="next_tariff_status"><div title="If 0 uses regular request status">{{sim.next_tariff_status }}</div></td>
+                        <td id="next_tariff_status_value"><div title="If 0 uses regular request status">{{sim.next_tariff_status }}</div></td>
                         <td>
                             <button  id="btntariff401" class="sendid" title="Force 401 status for next tariff request">401</button>
                             <button  id="btntariff404" class="sendid" title="Force 404 status for next tariff request">404</button>
@@ -94,10 +124,11 @@
                             <button  id="btntariffstatusclear" class="sendid" title="Use request status for next tariff requests">clear</button>
                         </td>
                     </tr>
+                    <!-- Zero sc sched endpoint status issue simulation, status and buttons to switch on/off -->
                     <tr>
                         <td><div title="Return sc sched invalid status">Invalid sc sched status:</div></td>
-                        <td id="sc_sched_status_0">{{ sim.sc_sched_status_0}}</td>
-                        <td><button  id="btnscschedstatus0" class="sendid" title="Toggle sc sched invalid status on/off">Toggle sc sched status 0</button></td>
+                        <td id="sc_sched_status_0_value">{{ sim.sc_sched_status_0}}</td>
+                        <td><button  id="sc_sched_status_0" class="togglebool" title="Toggle sc sched invalid status on/off">Toggle sc sched status 0</button></td>
                     </tr>
                 </tbody>
             </table>

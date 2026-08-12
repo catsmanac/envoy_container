@@ -176,6 +176,13 @@ $(document).ready(function(){
 
     // signal (server/python) to toggle states
     //
+    $('.togglebool').on("click", function(event) {
+        var id = this.id
+        socket.emit("togglebool", {data: id});
+    });
+
+    // signal (server/python) to toggle states
+    //
     $('.sendid').on("click", function(event) {
         socket.emit(this.id, {data: ""});
     });
