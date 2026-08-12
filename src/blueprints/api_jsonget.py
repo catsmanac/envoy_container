@@ -2,6 +2,7 @@
 
 import copy
 import logging
+import random
 from typing import Any
 
 from awesomeversion import AwesomeVersion
@@ -118,6 +119,10 @@ def json_request():
     elif froute in ("production", "production.json", "production.json_details_1"):
         orig_content, status, file_loaded, added = sim.load_json(froute)
         content: dict[str, Any] = copy.deepcopy(orig_content)
+
+        if sim.variable_power:
+            factor = 0.5 + random.random()
+            content["production"][1]["wNow"] *= factor
 
         if sim.active_eim_0:
             content["production"][1]["activeCount"] = 0

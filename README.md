@@ -155,6 +155,7 @@ These allow manual control to simulate specific behavior to be tested.
 | Next tariff Status | Force selected status only for /lib/admin/tariff endpoint. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
 | Sc sched invalid status | Return an invalid status 0 for /ivp/sc/sched endpoint. | Use `Toggle sc sched status 0` button to (de-)activate. |
 | ActiveEim zero | return activeCount = 0 for Production eim for /production endpoint| Use `Toggle active eim 0 on/off` button to (de-)activate. |
+| Variable Power | return power values with some variations so they change | Use `Toggle variable Power on/off` button to (de-)activate. |
 
 ### Build-in simulations
 

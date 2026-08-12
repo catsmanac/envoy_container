@@ -33,6 +33,7 @@ class EnvoySim:
     next_tariff_status: int = 0  # reply nexttarif endpoint with this status
     sc_sched_status_0: bool = False  # return invalid status 0
     active_eim_0: bool = False  # return active eim 0 in /production
+    variable_power: bool = False  # add some variation to power values
 
     stream: bool = False  # streaming mode on/off
     stream_interval: float = 2.0  # sleep time between sending stream data
@@ -136,6 +137,7 @@ class EnvoySim:
         self.next_tariff_status = 0
         self.sc_sched_status_0 = False
         self.active_eim_0 = False
+        self.variable_power = False
 
         logger.info(f"sim firmware: {self.firmware}")
         logger.info(f"sim serial: {self.serial}")
