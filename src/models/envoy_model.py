@@ -34,6 +34,9 @@ class EnvoySim:
     sc_sched_status_0: bool = False  # return invalid status 0
     active_eim_0: bool = False  # return active eim 0 in /production
     variable_power: bool = False  # add some variation to power values
+    store_ct_ph_1_0: bool = (
+        False  # return zero values in store ct phase 1 and matching agg
+    )
 
     stream: bool = False  # streaming mode on/off
     stream_interval: float = 2.0  # sleep time between sending stream data
@@ -138,6 +141,7 @@ class EnvoySim:
         self.sc_sched_status_0 = False
         self.active_eim_0 = False
         self.variable_power = False
+        self.store_ct_ph_1_0 = False
 
         logger.info(f"sim firmware: {self.firmware}")
         logger.info(f"sim serial: {self.serial}")

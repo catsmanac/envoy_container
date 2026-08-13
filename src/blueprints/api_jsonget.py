@@ -116,6 +116,7 @@ def json_request():
         status = 0
 
     # for /production set activeCount of production eim 0 if sim is enabled
+    # and apply varying power if sim is enabled
     elif froute in ("production", "production.json", "production.json_details_1"):
         orig_content, status, file_loaded, added = sim.load_json(froute)
         content: dict[str, Any] = copy.deepcopy(orig_content)
@@ -123,9 +124,30 @@ def json_request():
         if sim.variable_power:
             factor = 0.5 + random.random()
             content["production"][1]["wNow"] *= factor
+            for line in content["production"][1]["lines"]:
+                line["wNow"] *= factor
 
         if sim.active_eim_0:
             content["production"][1]["activeCount"] = 0
+
+    # for /ivp/meters/readings set ph1 data to 0 and agg value to ph2 if sim is enabled
+    # and apply varying power if sim is enabled
+    elif froute == "ivp_meters_readings":
+        orig_content, status, file_loaded, added = sim.load_json(froute)
+        content: dict[str, Any] = copy.deepcopy(orig_content)
+
+        if sim.variable_power:
+            factor = 0.5 + random.random()
+            for meter in content:
+                meter["activePower"] *= factor
+                for channel in meter["channels"]:
+                    channel["activePower"] *= factor
+
+        if sim.store_ct_ph_1_0 and len(content) > 2 and len(content[2]["channels"]) > 1:
+            for item, value in content[2]["channels"][1].items():
+                if item not in ("eid", "timestamp"):
+                    content[2]["channels"][0][item] = 0
+                    content[2][item] = value
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {full_path()}</code> '

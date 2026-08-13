@@ -146,18 +146,26 @@ These allow manual control to simulate specific behavior to be tested.
 
 | Item | Description | Notes |
 |------|-------------|-------|
-| JWT Authorized | Shows the JWT endpoint was used.| Only `/info` and `/home` endpoints can be accessed withouth authorization. For other endpoint API client must authorize with /auth/check_jwt. Toggle it to test unauthorized state.|
+| JWT Authorized | Shows the JWT endpoint was used.| Only `/info` and `/home` endpoints can be accessed withouth authorization. For other endpoint API client must authorize with /auth/check_jwt. Use it to test unauthorized state.|
 | Restarting | If non-zero a restart simulation is active.| The value is how many client requests are still needed to end a restarting simulation. Use the `restart` button to (de-)activate a restart. |
-| Timeout sim | Will delay any reply by 5 minutes thus effectively triggering request timeouts. | Use the `toggle timeout` button to (de-)activate. The sleepers count shows how many requests are in this state. |
+| Timeout sim | Will delay any reply by 5 minutes thus effectively triggering request timeouts. | Use the `Timeout on/off` button to (de-)activate. The sleepers count shows how many requests are in this state. |
 | Next req Status | Force selected status on all requests. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
-| Empty Inverter Array | Return an empty inverter array for next /api/v1/production/inverters endpoint. | Use `Toggle empty array` button to (de-)activate. |
-| Inverter Invalid json | Return malformed inverter json for next /api/v1/production/inverters endpoint. | Use `Toggle invalid json` button to (de-)activate. |
-| Next tariff Status | Force selected status only for /lib/admin/tariff endpoint. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
-| Sc sched invalid status | Return an invalid status 0 for /ivp/sc/sched endpoint. | Use `Toggle sc sched status 0` button to (de-)activate. |
-| ActiveEim zero | return activeCount = 0 for Production eim for /production endpoint| Use `Toggle active eim 0 on/off` button to (de-)activate. |
-| Variable Power | return power values with some variations so they change | Use `Toggle variable Power on/off` button to (de-)activate. |
+| Empty Inverter Array | Return an empty inverter array for /api/v1/production/inverters endpoint requests. | Use `Empty array on/off` button to (de-)activate. |
+| Inverter Invalid json | Return malformed inverter json for /api/v1/production/inverters endpoint. | Use `Invalid json on/off` button to (de-)activate. |
+| Next tariff Status | Force selected status for /lib/admin/tariff endpoint requests. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
+| Sc sched invalid status | Return an invalid status 0 for /ivp/sc/sched endpoint requests. | Use `SC sched status 0` button to (de-)activate. |
+| ActiveEim zero | Return Production activeCount = 0 for type=eim for /production endpoint requests.| Use `Active eim 0 on/off` button to (de-)activate. |
+| Variable Power | Return power values with some variations for some endpoint requests, see [Power variations](#power-variations). | Use `Variable Power on/off` button to (de-)activate. |
+| Storage CT phase zero | Return zero phase 1 data for storage CT for /ivp/meters/readings endpoint requests. | Use `Storage CT phase 0 on/off` button to (de-)activate. |
 
 ### Build-in simulations
+
+#### Power variations
+
+To test with varying data, power values can be simulated by varyfing them randomly between 50 and 150 % of their value on each read. Values changed are:
+
+- /production wNow value of aggregated and phases production (type=eim)
+- /ivp/meters/readings activePower value of aggregated and phases of all meters
 
 #### ACB Sleep state
 

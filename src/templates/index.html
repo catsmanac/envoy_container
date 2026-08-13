@@ -42,7 +42,7 @@
                     <tr>
                         <td>Verbose:</td>
                         <td id="verbosity_value">{{ sim.verbosity }}</td>
-                        <td><button  id="btnverbosity" class="sendid" title="Toggle verbosity 0-1-2-0">Toggle Verbosity</button></td>
+                        <td><button  id="btnverbosity" class="sendid" title="Toggle verbosity 0-1-2-0">Change Verbosity</button></td>
                     </tr>
                     <!-- Envoy serial number returned in all data with serial number, overrides file values-->
                     <tr>
@@ -75,7 +75,7 @@
                     <tr>
                         <td>JWT Authorized:</td>
                         <td id="authorized_value">{{ sim.authorized() }} ({{ sim.auth_count }})</td>
-                        <td><button id="btnauthorize" class="sendid" title="Toggle authorized on/off">Toggle Auth</button></td>
+                        <td><button id="btnauthorize" class="sendid" title="Toggle authorized on/off">Authorized on/ff</button></td>
                     </tr>
                     <!-- Envoy restarting simulation, counter to completion and button to toggle on/off-->
                     <tr>
@@ -87,7 +87,7 @@
                     <tr>
                         <td><div title="Simulate timeout by delaying request reply">Timeout sim:</div></td>
                         <td id="timeoutsim_value">{{ sim.timeoutsim }}</td>
-                        <td><button  id="timeoutsim" class="togglebool" title="Toggle timeout simulation on/off">Toggle Timeout</button></td>
+                        <td><button  id="timeoutsim" class="togglebool" title="Toggle timeout simulation on/off">Timeout on/off</button></td>
                         <td><div id="sleepers" title="Number of request replies with active delay">sleepers: {{ sim.sleepers }}</div></td>
                     </tr>
                    <!-- Any request status simulation, selected value and buttons to select -->
@@ -105,13 +105,13 @@
                     <tr>
                         <td><div title="Return empty inverter arrays">Empty inverter array:</div></td>
                         <td id="empty_inverter_array_value">{{ sim.empty_inverter_array}}</td>
-                        <td><button  id="empty_inverter_array" class="togglebool" title="Toggle empty inverter array on/off">Toggle empty array</button></td>
+                        <td><button  id="empty_inverter_array" class="togglebool" title="Toggle empty inverter array on/off">Empty array on/off</button></td>
                     </tr>
                    <!-- Malformed inverter json issue simulation, status and buttons to switch on/off -->
                     <tr>
                         <td><div title="Return malformed json inverter data">Inverter invalid json:</div></td>
                         <td id="invalid_json_value">{{ sim.invalid_json}}</td>
-                        <td><button  id="invalid_json" class="togglebool" title="Toggle invalid inverter json on/off">Toggle invalid json</button></td>
+                        <td><button  id="invalid_json" class="togglebool" title="Toggle invalid inverter json on/off">Invalid json on/off</button></td>
                     </tr>
                    <!-- Tariff request status simulation, selected value and buttons to select -->
                     <tr>
@@ -128,19 +128,25 @@
                     <tr>
                         <td><div title="Return sc sched invalid status">Invalid sc sched status:</div></td>
                         <td id="sc_sched_status_0_value">{{ sim.sc_sched_status_0}}</td>
-                        <td><button  id="sc_sched_status_0" class="togglebool" title="Toggle sc sched invalid status on/off">Toggle sc sched status 0</button></td>
+                        <td><button  id="sc_sched_status_0" class="togglebool" title="Toggle sc sched invalid status on/off">SC sched status 0 on/off</button></td>
                     </tr>
                     <!-- Active eimcount 0 production endpoint simulation, status and buttons to switch on/off -->
                     <tr>
                         <td><div title="Return zero active eim">activeEim zero:</div></td>
                         <td id="active_eim_0_value">{{ sim.active_eim_0}}</td>
-                        <td><button  id="active_eim_0" class="togglebool" title="Toggle active eim 0 on/off">Toggle active eim 0 on/off</button></td>
+                        <td><button  id="active_eim_0" class="togglebool" title="Toggle active eim 0 on/off">Active eim 0 on/off</button></td>
                     </tr>
                     <!-- Variable power on power values simulation, status and buttons to switch on/off -->
                     <tr>
                         <td><div title="Variable power">Variable Power values:</div></td>
                         <td id="variable_power_value">{{ sim.variable_power}}</td>
-                        <td><button  id="variable_power" class="togglebool" title="Toggle variable Power on/off">Toggle variable power on/off</button></td>
+                        <td><button  id="variable_power" class="togglebool" title="Toggle variable Power on/off">Variable power on/off</button></td>
+                    </tr>
+                    <!-- Storage CT phase data zero issue simulation, status and buttons to switch on/off -->
+                    <tr>
+                        <td><div title="Storage CT phase all zero">Storage CT phase zero:</div></td>
+                        <td id="store_ct_ph_1_0_value">{{ sim.store_ct_ph_1_0}}</td>
+                        <td><button  id="store_ct_ph_1_0" class="togglebool" title="Toggle store CT phase zero on/off">Storage CT phase 0 on/off</button></td>
                     </tr>
                 </tbody>
             </table>
