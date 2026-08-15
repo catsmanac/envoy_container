@@ -138,7 +138,7 @@ Provides status and options to select for the running simulator.
 | Serial number | Envoy serial number in use | Default or as set in environment variables, if not specified from the fixture file `info` |
 | Firmware version | Envoy firmware version as found in the fixture file `info` | |
 | Fixture folder | Current active fixture fileset folder | As set in environment variables or manualy selected |
-| Switch to fixture | Select a new fixture file set to use | Select fileset from pulldown and use `Load` button to activate it. Simulator will reload with new fixture data. |
+| Switch to fixture | Select a new fixture file set to use | Select fileset from pulldown and use `Load` button to activate it. Simulator will reload with new fixture data. Use the `Remember >` button to update the environment file with selected one in the pulldown.|
 
 ### Manual simulations
 

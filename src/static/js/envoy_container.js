@@ -156,14 +156,24 @@ $(document).ready(function(){
     //
     $('#btnchangesim').on("click", function(event) {
         var v = $('#select_sim').find(":selected").val();
-        socket.emit('btnchangesim', {data: v});
+        var id = this.id
+        socket.emit(id, {data: v});
+    });
+
+    // signal (server/python) to remember fixture in .env
+    //
+    $('#btnremembersim').on("click", function(event) {
+        var v = $('#select_sim').find(":selected").val();
+        var id = this.id
+        socket.emit(id, {data: v});
     });
 
     // signal (server/python) to reload cache list
     //
     $('#btncacherefresh').on("click", function(event) {
         var v = document.getElementById('cachename')
-        socket.emit('btncacherefresh', {data:  v.textContent || v.innerText });
+        var id = this.id
+        socket.emit(id, {data:  v.textContent || v.innerText });
     });
     
 
@@ -171,7 +181,8 @@ $(document).ready(function(){
     //
     $('#btnfixturesrefresh').on("click", function(event) {
         var v = document.getElementById('fixturename')
-        socket.emit('btnfixturesrefresh', {data: v.textContent || v.innerText });
+        var id = this.id
+        socket.emit(id, {data: v.textContent || v.innerText });
     });
 
     // signal (server/python) to toggle states

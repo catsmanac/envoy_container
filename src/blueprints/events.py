@@ -6,6 +6,7 @@ from typing import Any
 from flask import current_app, request
 from flask_socketio import emit  # type: ignore
 
+from app_setup import env_update
 from io_blueprint import IOBlueprint
 from models.envoy_model import EnvoySim
 from utils import emit_log, getsim, update_cache_list, update_fixture_list, update_index
@@ -35,6 +36,17 @@ def change_sim(message: Any):
     update_cache_list()
     # update index page fields
     update_index()
+
+
+@events.on("btnremembersim")  # type: ignore
+def btnremembersim(message: Any):
+    """Execute activate path button press."""
+    sim: EnvoySim | None = getsim()
+    if not sim:
+        return
+    emit_log(f"Setting sim {message['data']} as new default", logit=True)
+    # update app config
+    env_update({"FIXTURE": message["data"]})
 
 
 @events.on("btnverbosity")  # type: ignore

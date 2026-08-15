@@ -5,7 +5,7 @@ import logging.handlers
 import os
 from typing import Any
 
-from dotenv import load_dotenv
+from dotenv import load_dotenv, set_key
 
 from models.envoy_model import EnvoySim
 
@@ -76,3 +76,9 @@ def app_setup() -> dict[str, Any]:
     envoy_sim.start_sim()
 
     return env
+
+
+def env_update(settings: dict[str, Any]) -> None:
+    """Appened new variable to env file."""
+    for key, value in settings.items():
+        set_key(ENV_FILE, key, value)
