@@ -218,4 +218,11 @@ $(document).ready(function(){
         socket.emit('showcachefile', {data: event.target.id});
     });
 
+    // add log entry to log
+    //
+    $('#btnaddlogentry').on("click", function(event) {
+        var v = $('#logentry').val();
+        socket.emit('echolog', {data: v});
+        $('#logentry').val('')
+    });
 });

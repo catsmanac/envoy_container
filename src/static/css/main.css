@@ -58,9 +58,14 @@ body {
 
 /* Style the logging box */
 .logger {
-    max-height:70vh;
-    overflow:scroll;
-    border: 1px solid #666;
+  max-height:70vh;
+  overflow:scroll;
+  border: 1px solid #666;
+}
+
+/* Style the manual log entry box */
+#logentry {
+  width: 85%;
 }
 
 /* Style the cache and fixture file lists */

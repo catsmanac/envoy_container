@@ -230,3 +230,9 @@ def connect(message: Any):
     emit_log(
         f"using serial {sim.serial}, fixture {sim.fixture_folder()} for fw {sim.firmware}"
     )
+
+
+@events.on("echolog")  # type: ignore
+def echolog(message: Any):
+    """Execute fixture list refresh."""
+    emit_log(f"{message['data']}", True)
