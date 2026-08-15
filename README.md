@@ -13,7 +13,7 @@ The simulator in no way resembles any internal part of a physical Envoy, but rat
 
 The provided data is static, as read from the fixture files. Fixture file data is loaded into the internal data model. Any PUT or POST data is updating the internal data model and returned in a subsequent GET requests. The data is reset to fixture file content at restart of the simulator or load of a different fixture file set.
 
-The simulator has logic for various test scenarios, all added as the need was there. These can be controlled from the [UI](#ui).
+The simulator has logic for various test scenarios, all added as the need was there. These can be controlled from the [UI](#ui). The test scenarios either change the data in the internal data model or modify it before returning it as request response.
 
 [Back to content](#content)
 
@@ -108,7 +108,7 @@ Which fixture files need to be in a fixture file set is fully driven by what you
 
 ### Certificate
 
-The simulator is accessible via https, like the physical Envoy device. By default is uses ad-hoc ssl-context which creates a self-signed certificate at each startup. That will work fine for the API and testing, provided your code does not verify the server certificate.
+The simulator is accessible via https, like the physical Envoy device. By default it uses ad-hoc ssl-context which creates a self-signed certificate at each startup. That will work fine for the API and testing, provided your code does not verify the server certificate.
 
 The simulator also provides a [user interface](#ui) at `/` with the same ssl context. This will cause your browser to kick-in and report a security issue after each (re-)start of the container.
 
@@ -122,7 +122,7 @@ openssl req -x509 -newkey rsa:4096 -nodes -out cert.pem -keyout key.pem -days 36
 
 # UI
 
-The simulator offers a user interface accessible with your browser at the configured ip address. It provides options to configure the use of the simulator, view logs and inspect data in the internal data model or the actual fixture files. These are accessible in the tabs on the main page.
+The simulator offers a user interface accessible with your browser at the configured ip address. The UI provides options to configure the use of the simulator, view logs, inspect data in the internal data model or the actual fixture files.
 
 ## Configuration
 
@@ -134,11 +134,11 @@ Provides status and options to select for the running simulator.
 
 | Item | Description | Notes |
 |------|-------------|-------|
-| Verbose | Verbosity level for log tab from 0-2 | Use the `toggle verbosity` button to change it |
-| Serial number | Envoy serial number in use | Default or as set in environment variables |
+| Verbose | Verbosity level for log tab from 0-2 | Use the `Change verbosity` button to change it |
+| Serial number | Envoy serial number in use | Default or as set in environment variables, if not specified from the fixture file `info` |
 | Firmware version | Envoy firmware version as found in the fixture file `info` | |
-| Fixture folder | Current active fixture fileset folder | As set in environment variables or manualy changed |
-| Switch to fixture | Select a new fixture file set to use | Select fileset from pulldown and use `Switch` button to activate it. Simulator will reload with new fixture data. |
+| Fixture folder | Current active fixture fileset folder | As set in environment variables or manualy selected |
+| Switch to fixture | Select a new fixture file set to use | Select fileset from pulldown and use `Load` button to activate it. Simulator will reload with new fixture data. |
 
 ### Manual simulations
 
@@ -146,23 +146,23 @@ These allow manual control to simulate specific behavior to be tested.
 
 | Item | Description | Notes |
 |------|-------------|-------|
-| JWT Authorized | Shows the JWT endpoint was used.| Only `/info` and `/home` endpoints can be accessed withouth authorization. For other endpoint API client must authorize with /auth/check_jwt. Use it to test unauthorized state.|
-| Restarting | If non-zero a restart simulation is active.| The value is how many client requests are still needed to end a restarting simulation. Use the `restart` button to (de-)activate a restart. |
-| Timeout sim | Will delay any reply by 5 minutes thus effectively triggering request timeouts. | Use the `Timeout on/off` button to (de-)activate. The sleepers count shows how many requests are in this state. |
+| JWT Authorized | Shows the JWT endpoint was used.| Only `/info` and `/home` endpoints can be accessed withouth authorization. For other endpoint API client must authorize with /auth/check_jwt. Use it to force unauthorized state.|
+| Restarting | If non-zero a restart simulation is active and status 500 is returned| The value is how many client requests are still needed to end a restarting simulation. Use the `Restart` button to (de-)activate a restart. |
+| Timeout sim | Will delay any reply by 5 minutes thus effectively resulting in client request timeouts. | Use the `Timeout on/off` button to (de-)activate. The sleepers count shows how many requests are in this state. |
 | Next req Status | Force selected status on all requests. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
-| Empty Inverter Array | Return an empty inverter array for /api/v1/production/inverters endpoint requests. | Use `Empty array on/off` button to (de-)activate. |
-| Inverter Invalid json | Return malformed inverter json for /api/v1/production/inverters endpoint. | Use `Invalid json on/off` button to (de-)activate. |
+| Empty Inverter Array | Return an empty inverter array for /api/v1/production/inverters requests. | Use `Empty array on/off` button to (de-)activate. |
+| Inverter Invalid json | Return malformed inverter json for /api/v1/production/inverters requests. | Use `Invalid json on/off` button to (de-)activate. |
 | Next tariff Status | Force selected status for /lib/admin/tariff endpoint requests. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
-| Sc sched invalid status | Return an invalid status 0 for /ivp/sc/sched endpoint requests. | Use `SC sched status 0` button to (de-)activate. |
-| ActiveEim zero | Return Production activeCount = 0 for type=eim for /production endpoint requests.| Use `Active eim 0 on/off` button to (de-)activate. |
-| Variable Power | Return power values with some variations for some endpoint requests, see [Power variations](#power-variations). | Use `Variable Power on/off` button to (de-)activate. |
-| Storage CT phase zero | Return zero phase 1 data for storage CT for /ivp/meters/readings endpoint requests. | Use `Storage CT phase 0 on/off` button to (de-)activate. |
+| invalid sc sched status | Return an invalid status 0 for /ivp/sc/sched endpoint requests. | Use `SC sched status 0 on/off` button to (de-)activate. |
+| ActiveEim zero | Return Production type=eim activeCount = 0 for /production requests.| Use `Active eim 0 on/off` button to (de-)activate. |
+| Variable Power | Return power values with some variations for some requests, see [Power variations](#power-variations). | Use `Variable Power on/off` button to (de-)activate. |
+| Storage CT phase zero | Return storage CT zero phase 1 data for /ivp/meters/readings requests. | Use `Storage CT phase 0 on/off` button to (de-)activate. |
 
 ### Build-in simulations
 
 #### Power variations
 
-To test with varying data, power values can be simulated by varyfing them randomly between 50 and 150 % of their value on each read. Values changed are:
+To test with varying data, power values can be varied randomly between 50 and 150 % of their value on each read. Values changed are:
 
 - /production wNow value of aggregated and phases production (type=eim)
 - /ivp/meters/readings activePower value of aggregated and phases of all meters
