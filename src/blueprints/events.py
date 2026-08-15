@@ -74,7 +74,7 @@ def toggle_bool(attribute: Any):
     target = not getattr(sim, attribute)
     setattr(sim, attribute, target)
     update_index()
-    if sim.verbosity > 1:
+    if sim.verbosity > 0:
         emit_log(f"Setting {attribute} to {target}", True)
 
 
@@ -212,3 +212,9 @@ def connect(message: Any):
     # this creates the first entry in the log viewer.
     emit_log(f"{request.remote_addr} connected to {request.path}")
     update_index()
+    sim: EnvoySim | None = getsim()
+    if not sim:
+        return
+    emit_log(
+        f"using serial {sim.serial}, fixture {sim.fixture_folder()} for fw {sim.firmware}"
+    )
