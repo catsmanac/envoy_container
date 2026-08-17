@@ -65,6 +65,13 @@ def json_request():
         content = segment
         status = 200
 
+    # apply varying power if sim is enabled
+    elif froute == "api_v1_production" and sim.variable_power:
+        orig_content, status, file_loaded, added = sim.load_json(froute)
+        content: dict[str, Any] = copy.deepcopy(orig_content)
+        factor = 0.5 + random.random()
+        content["wattsNow"] = round(factor * content["wattsNow"])
+
     # for tariff endpoint send 401, 404 or 503 status if overridden
     elif froute == "admin_lib_tariff" and ((_s := sim.next_tariff_status) > 0):
         content = (
@@ -123,11 +130,19 @@ def json_request():
 
         if sim.variable_power:
             factor = 0.5 + random.random()
-            content["production"][1]["wNow"] *= factor
-            for line in content["production"][1]["lines"]:
-                line["wNow"] *= factor
+            if len(content["production"]) > 1:
+                content["production"][1]["wNow"] = round(
+                    factor * content["production"][1]["wNow"]
+                )
+                for line in content["production"][1]["lines"]:
+                    line["wNow"] = round(factor * line["wNow"])
+            else:
+                # non-metered has no eim section
+                content["production"][0]["wNow"] = round(
+                    factor * content["production"][0]["wNow"]
+                )
 
-        if sim.active_eim_0:
+        if sim.active_eim_0 and len(content["production"]) > 1:
             content["production"][1]["activeCount"] = 0
 
     # for /ivp/meters/readings set ph1 data to 0 and agg value to ph2 if sim is enabled
@@ -139,9 +154,9 @@ def json_request():
         if sim.variable_power:
             factor = 0.5 + random.random()
             for meter in content:
-                meter["activePower"] *= factor
+                meter["activePower"] = round(meter["activePower"] * factor)
                 for channel in meter["channels"]:
-                    channel["activePower"] *= factor
+                    channel["activePower"] = round(channel["activePower"] * factor)
 
         if sim.store_ct_ph_1_0 and len(content) > 2 and len(content[2]["channels"]) > 1:
             for item, value in content[2]["channels"][1].items():
