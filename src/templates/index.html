@@ -74,6 +74,12 @@
                             <button  id="btnremembersim">Remember ></button>
                         </div></td>
                     </tr>
+                    <!-- Variable power on power values simulation, status and buttons to switch on/off -->
+                    <tr>
+                        <td><div title="Return varying power values">Varying Power values:</div></td>
+                        <td id="variable_power_value">{{ sim.variable_power}}</td>
+                        <td><button  id="variable_power" class="togglebool" title="Toggle variable Power on/off">Variable power on/off</button></td>
+                    </tr>
                     <!-- State of JWT key, if JWT validate req was send and button to toggle state on/off-->
                     <tr>
                         <td>JWT Authorized:</td>
@@ -91,7 +97,7 @@
                         <td><div title="Simulate timeout by delaying request reply">Timeout sim:</div></td>
                         <td id="timeoutsim_value">{{ sim.timeoutsim }}</td>
                         <td><button  id="timeoutsim" class="togglebool" title="Toggle timeout simulation on/off">Timeout on/off</button></td>
-                        <td><div id="sleepers" title="Number of request replies with active delay">sleepers: {{ sim.sleepers }}</div></td>
+                        <td><div id="sleepers_value" title="Number of request replies with active delay">sleepers: {{ sim.sleepers }}</div></td>
                     </tr>
                    <!-- Any request status simulation, selected value and buttons to select -->
                     <tr>
@@ -138,12 +144,6 @@
                         <td><div title="Return zero active eim">activeEim zero:</div></td>
                         <td id="active_eim_0_value">{{ sim.active_eim_0}}</td>
                         <td><button  id="active_eim_0" class="togglebool" title="Toggle active eim 0 on/off">Active eim 0 on/off</button></td>
-                    </tr>
-                    <!-- Variable power on power values simulation, status and buttons to switch on/off -->
-                    <tr>
-                        <td><div title="Variable power">Variable Power values:</div></td>
-                        <td id="variable_power_value">{{ sim.variable_power}}</td>
-                        <td><button  id="variable_power" class="togglebool" title="Toggle variable Power on/off">Variable power on/off</button></td>
                     </tr>
                     <!-- Storage CT phase data zero issue simulation, status and buttons to switch on/off -->
                     <tr>
