@@ -68,6 +68,7 @@ def update_index():
             "verbosity_value": f"{sim.verbosity}",
             "envoy_cycling_value": f"{sim.envoy_cycling}",
             "timeoutsim_value": f"{sim.timeoutsim}",
+            "hometimeoutsim_value": f"{sim.hometimeoutsim}",
             "sleepers_value": f"sleepers: {sim.sleepers}",
             "next_request_status_value": f"{sim.next_request_status}",
             "empty_inverter_array_value": f"{sim.empty_inverter_array}",
@@ -125,7 +126,9 @@ async def before_requests():
 
     # simulate timeout by delaying abort for 150 sec for any request
     request_ip = request.environ.get("REMOTE_ADDR")
-    if sim.timeoutsim and request.path not in ("/info", "/info.xml", "/auth/check_jwt"):
+    if (
+        sim.timeoutsim and request.path not in ("/info", "/info.xml", "/auth/check_jwt")
+    ) or (sim.hometimeoutsim and request.path == "/home"):
         emit_log(f"Sleeping on {request_ip} {endpoint}", logit=True)
         sim.sleepers += 1
         update_index()

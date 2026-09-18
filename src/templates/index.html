@@ -99,6 +99,12 @@
                         <td><button  id="timeoutsim" class="togglebool" title="Toggle timeout simulation on/off">Timeout on/off</button></td>
                         <td><div id="sleepers_value" title="Number of request replies with active delay">sleepers: {{ sim.sleepers }}</div></td>
                     </tr>
+                   <!-- Timeout simulation for /home, status and button to toggle on/off, count of requests shered with timeout simulation-->
+                    <tr>
+                        <td><div title="Simulate home timeout by delaying request reply">/Home Timeout sim:</div></td>
+                        <td id="hometimeoutsim_value">{{ sim.hometimeoutsim }}</td>
+                        <td><button  id="hometimeoutsim" class="togglebool" title="Toggle /home timeout simulation on/off">Timeout on/off</button></td>
+                    </tr>
                    <!-- Any request status simulation, selected value and buttons to select -->
                     <tr>
                         <td><div title="Use this status for next request reply">Next req Status:</div></td>
