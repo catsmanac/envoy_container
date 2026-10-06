@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import Any
 from xml.etree import ElementTree as et
@@ -69,6 +70,8 @@ class EnvoySim:
         if from_cache and file in self.fixture_cache:
             return self.fixture_cache[file], 200, file, False
         target = self.fixture_folder() + "/" + file
+        if not os.path.isfile(target):
+            target = self.fixture_folder() + "/" + file + ".json"
         try:
             with open(target) as f:
                 logger.debug(f"loading: {target}")
