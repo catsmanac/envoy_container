@@ -26,6 +26,9 @@ class EnvoySim:
     auth_count: int = 0  # must be >0 to be authorized, auth jwt endpoint adds 1
     envoy_cycling: int = 0  # next replies will simulate restart of envoy
     timeoutsim: bool = False  # simulate timeout by long wait time before response
+    fulltimeoutsim: bool = (
+        False  # simulate full timeout by long wait time before response
+    )
     hometimeoutsim: bool = (
         False  # simulate timeout on /home by long wait time before response
     )
@@ -139,6 +142,7 @@ class EnvoySim:
         self.add_info_to_cache()
         self.auth_count = 0
         self.timeoutsim = False
+        self.fulltimeoutsim = False
         self.hometimeoutsim = False
         self.sleepers = 0
         self.next_request_status = 0
