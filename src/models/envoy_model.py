@@ -2,6 +2,7 @@
 
 import json
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import Any
 from xml.etree import ElementTree as et
@@ -25,6 +26,12 @@ class EnvoySim:
     auth_count: int = 0  # must be >0 to be authorized, auth jwt endpoint adds 1
     envoy_cycling: int = 0  # next replies will simulate restart of envoy
     timeoutsim: bool = False  # simulate timeout by long wait time before response
+    fulltimeoutsim: bool = (
+        False  # simulate full timeout by long wait time before response
+    )
+    hometimeoutsim: bool = (
+        False  # simulate timeout on /home by long wait time before response
+    )
     sleepers: int = 0  # number of sleeping requests
     ip_sleep_time: int = 450  # sleep this long to simulate timeout
     next_request_status: int = 0  # next request reply status if not 0
@@ -66,6 +73,8 @@ class EnvoySim:
         if from_cache and file in self.fixture_cache:
             return self.fixture_cache[file], 200, file, False
         target = self.fixture_folder() + "/" + file
+        if not os.path.isfile(target):
+            target = self.fixture_folder() + "/" + file + ".json"
         try:
             with open(target) as f:
                 logger.debug(f"loading: {target}")
@@ -133,6 +142,8 @@ class EnvoySim:
         self.add_info_to_cache()
         self.auth_count = 0
         self.timeoutsim = False
+        self.fulltimeoutsim = False
+        self.hometimeoutsim = False
         self.sleepers = 0
         self.next_request_status = 0
         self.empty_inverter_array = False

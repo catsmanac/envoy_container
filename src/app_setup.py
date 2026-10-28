@@ -38,7 +38,7 @@ def app_setup() -> dict[str, Any]:
     env["fixture"] = os.environ.get("FIXTURE", "")
     env["serial"] = os.environ.get("ENVOY_SERIAL", "1234456789012")
     env["host"] = os.environ.get("HOST", "0.0.0.0")  # noqa: S104
-    env["port"] = 443
+    env["port"] = os.environ.get("PORT", 443)
     env["JSON_SORT_KEYS"] = False
     # Set this ASYNC_MODE to None, "threading", "eventlet" or "gevent"
     env["async"] = os.environ.get("ASYNC_MODE")
