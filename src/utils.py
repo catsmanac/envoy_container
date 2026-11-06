@@ -79,6 +79,7 @@ def update_index():
             "active_eim_0_value": f"{sim.active_eim_0}",
             "variable_power_value": f"{sim.variable_power}",
             "store_ct_ph_1_0_value": f"{sim.store_ct_ph_1_0}",
+            "lifetime_0_value": f"{sim.lifetime_0}",
         },
         broadcast=True,
         namespace="/",

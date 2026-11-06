@@ -148,7 +148,8 @@ These allow manual control to simulate specific behavior to be tested.
 |------|-------------|-------|
 | JWT Authorized | Shows the JWT endpoint was used.| Only `/info` and `/home` endpoints can be accessed withouth authorization. For other endpoint API client must authorize with /auth/check_jwt. Use it to force unauthorized state.|
 | Restarting | If non-zero a restart simulation is active and status 500 is returned| The value is how many client requests are still needed to end a restarting simulation. Use the `Restart` button to (de-)activate a restart. |
-| Timeout sim | Will delay any reply by 5 minutes thus effectively resulting in client request timeouts. | Use the `Timeout on/off` button to (de-)activate. The sleepers count shows how many requests are in this state. |
+| Timeout sim | Will delay non /info or /auth/check_jwt replies by 5 minutes thus effectively resulting in client request timeouts. | Use the `Timeout on/off` button to (de-)activate. The sleepers count shows how many requests are in this state. |
+| Full Timeout sim | Will delay any reply by 5 minutes thus effectively resulting in client request timeouts. | Use the `Timeout on/off` button to (de-)activate. The sleepers count shows how many requests are in this state. |
 | Next req Status | Force selected status on all requests. | Use the `401`, `404` , `503` buttons to select a status to use and `clear` to end status forcing. |
 | Empty Inverter Array | Return an empty inverter array for /api/v1/production/inverters requests. | Use `Empty array on/off` button to (de-)activate. |
 | Inverter Invalid json | Return malformed inverter json for /api/v1/production/inverters requests. | Use `Invalid json on/off` button to (de-)activate. |
@@ -157,6 +158,7 @@ These allow manual control to simulate specific behavior to be tested.
 | ActiveEim zero | Return Production type=eim activeCount = 0 for /production requests.| Use `Active eim 0 on/off` button to (de-)activate. |
 | Variable Power | Return power values with some variations for some requests, see [Power variations](#power-variations). | Use `Variable Power on/off` button to (de-)activate. |
 | Storage CT phase zero | Return storage CT zero phase 1 data for /ivp/meters/readings requests. | Use `Storage CT phase 0 on/off` button to (de-)activate. |
+| Lifetime energy zero | Return zero lifetime energy for /production and /ivp/meters/readings requests. | Use `Lifetime energy 0 on/off` button to (de-)activate. |
 
 ### Build-in simulations
 

@@ -145,6 +145,19 @@ def json_request():
         if sim.active_eim_0 and len(content["production"]) > 1:
             content["production"][1]["activeCount"] = 0
 
+        if sim.lifetime_0:
+            if len(content["production"]) > 1:
+                content["production"][1]["whLifetime"] = 0
+                for line in content["production"][1]["lines"]:
+                    line["whLifetime"] = 0
+            else:
+                # non-metered has no eim section
+                content["production"][0]["whLifetime"] = 0
+            for cons in content["consumption"]:
+                cons["whLifetime"] = 0
+                for line in cons["lines"]:
+                    line["whLifetime"] = 0
+
     # for /ivp/meters/readings set ph1 data to 0 and agg value to ph2 if sim is enabled
     # and apply varying power if sim is enabled
     elif froute == "ivp_meters_readings":
@@ -163,6 +176,14 @@ def json_request():
                 if item not in ("eid", "timestamp"):
                     content[2]["channels"][0][item] = 0
                     content[2][item] = value
+
+        if sim.lifetime_0:
+            for meter in content:
+                meter["actEnergyDlvd"] = 0
+                meter["actEnergyRcvd"] = 0
+                for channel in meter["channels"]:
+                    channel["actEnergyDlvd"] = 0
+                    channel["actEnergyRcvd"] = 0
 
     emit_log(
         f'<code class="highlight">{request.method} {status} {full_path()}</code> '

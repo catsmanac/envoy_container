@@ -44,6 +44,7 @@ class EnvoySim:
     store_ct_ph_1_0: bool = (
         False  # return zero values in store ct phase 1 and matching agg
     )
+    lifetime_0: bool = False  # return zero values for lifetime energy
 
     stream: bool = False  # streaming mode on/off
     stream_interval: float = 2.0  # sleep time between sending stream data
@@ -153,6 +154,7 @@ class EnvoySim:
         self.active_eim_0 = False
         self.variable_power = False
         self.store_ct_ph_1_0 = False
+        self.lifetime_0 = False
 
         logger.info(f"sim firmware: {self.firmware}")
         logger.info(f"sim serial: {self.serial}")
